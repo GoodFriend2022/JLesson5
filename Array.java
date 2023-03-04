@@ -4,16 +4,18 @@ import java.util.HashSet;
 public class Array {
     public static void main(String[] args) {
         
-        int[] nums1 = new int[] { 9, 8, 8, 0, 5, 8, 7, 7 };
+        int[] nums1 = new int[] { 9, 8, 8, 1, 5, 8, 7, 7 };
         //                        0  1  2  3  4  5  6  7
-        int[] nums2 = new int[] { 0, 8, 8, 0, 0, 0, 0 };
+        int[] nums2 = new int[] { 9, 0, 0, 0, 0, 0, 0 };
 
-        int maxSize = FindMaxSize(nums1, nums2);     
-        System.out.println(maxSize);
+        ArrayList<Integer> maxArray = FindMaxSizeArray(nums1, nums2);     
+        System.out.println(maxArray);
+        System.out.printf("Максимальная длина подмассива равна = %d", maxArray.size());
+        
     }
-    static int FindMaxSize(int[] nums1, int[] nums2) {
+    static ArrayList<Integer> FindMaxSizeArray(int[] nums1, int[] nums2) {
         HashSet<ArrayList<Integer>> dic = new HashSet<>();
-        int maxSize = 0;
+        ArrayList<Integer> maxSizeArray = new ArrayList<>();
         boolean item = true;
         for (int i = 0; i < nums1.length; i++) {
             if (!item) dic.clear();
@@ -28,13 +30,25 @@ public class Array {
                         if (j > 0 && nums2[j - 1] == nums2[j] && i > 0 && nums1[i - 1] != nums1[i]);
                         else if (col.contains(j - 1)) {
                             col.add(j);
-                            maxSize = col.size() > maxSize ? col.size() : maxSize;
+                            maxSizeArray = col.size() > maxSizeArray.size() ? col : maxSizeArray;
                         }
                     }
+                    maxSizeArray = item && maxSizeArray.size() < 1 ? array : maxSizeArray;
                 }
-                maxSize = item && maxSize < 1 ? 1 : maxSize;
             }
         }
-        return maxSize;
+        ConvertIndexToArray(maxSizeArray, nums2);
+        return maxSizeArray;
+    }
+
+    static void ConvertIndexToArray(ArrayList<Integer> list, int[] array) {
+        ArrayList<Integer> newList = new ArrayList<>();
+        if (!list.isEmpty()) {
+            for (int i : list) {
+                newList.add(array[i]);
+            }
+            list.clear();
+            list.addAll(newList);
+        }
     }
 }
